@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loopi - Reciclaje Inteligente en Chile</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2ecc71;
+            --primary-dark: #27ae60;
+            --secondary: #3498db;
+            --dark: #2c3e50;
+            --light: #f8f9fa;
+            --accent: #e67e22;
+            --shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Montserrat', sans-serif; color: var(--dark); line-height: 1.6; background-color: #fff; overflow-x: hidden; }
+
+        /* LOGO DE FONDO SEMI TRANSPARENTE */
+        .bg-watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-15deg);
+            font-size: 20vw;
+            font-weight: 900;
+            color: var(--primary);
+            opacity: 0.05;
+            z-index: -1;
+            user-select: none;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        /* HEADER */
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 8%; background: rgba(255, 255, 255, 0.95);
+            position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+        }
+        .logo { font-size: 26px; font-weight: 800; color: var(--primary); letter-spacing: -1px; }
+        .logo span { color: var(--secondary); }
+        
+        .nav-actions { display: flex; align-items: center; gap: 25px; }
+        .btn-login { text-decoration: none; color: var(--dark); font-weight: 600; font-size: 14px; cursor: pointer; border: none; background: none; }
+        .lang-select { border: 1px solid #eee; padding: 8px; border-radius: 8px; font-size: 13px; cursor: pointer; outline: none; }
+        
+        .btn-download {
+            background: var(--dark); color: white; padding: 12px 24px; border-radius: 50px;
+            text-decoration: none; font-size: 13px; font-weight: 700; transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .btn-download:hover { background: var(--primary); transform: translateY(-2px); }
+
+        /* SECCIONES COMUNES */
+        section { padding: 100px 10%; position: relative; }
+        h2 { text-align: center; font-size: 2.2rem; margin-bottom: 50px; font-weight: 700; position: relative; }
+        h2::after { content: ''; width: 60px; height: 4px; background: var(--primary); position: absolute; bottom: -15px; left: 50%; transform: translateX(-50%); border-radius: 2px; }
+
+        /* HERO */
+        .hero {
+            background: linear-gradient(135deg, #f5fcf8 0%, #ffffff 100%);
+            padding: 120px 10% 80px; text-align: center;
+        }
+        .hero h1 { font-size: 3.5rem; color: var(--dark); margin-bottom: 20px; font-weight: 800; }
+        .hero p { font-size: 1.2rem; color: #666; max-width: 700px; margin: 0 auto 40px; }
+
+        /* DATOS CURIOSOS */
+        .facts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .fact-card { 
+            background: white; padding: 40px; border-radius: 24px; text-align: center; 
+            box-shadow: var(--shadow); transition: 0.4s; border: 1px solid #f0f0f0;
+        }
+        .fact-card:hover { transform: translateY(-10px); border-color: var(--primary); }
+        .fact-card i { font-size: 45px; color: var(--primary); margin-bottom: 20px; display: block; }
+
+        /* NUEVA SECCIÓN: CONEXIONES EMPRESAS CHILENAS */
+        .partners { background: #f9f9f9; }
+        .partners-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+        .partner-card {
+            background: white; padding: 30px; border-radius: 20px; border-left: 5px solid var(--secondary);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        }
+        .partner-card h3 { font-size: 1.1rem; margin-bottom: 10px; color: var(--secondary); }
+        .partner-card p { font-size: 0.9rem; color: #777; }
+        .badge-rep { background: #e8f5e9; color: var(--primary-dark); font-size: 10px; padding: 3px 10px; border-radius: 10px; font-weight: bold; margin-bottom: 10px; display: inline-block; }
+
+        /* PROBLEMÁTICA */
+        .problems { background: #fff; }
+        .problem-box { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
+        .prob-item { display: flex; gap: 20px; margin-bottom: 30px; }
+        .prob-item i { color: #e74c3c; font-size: 24px; padding-top: 5px; }
+        .prob-item h4 { margin-bottom: 5px; font-size: 1.1rem; }
+
+        /* RECOMPENSAS */
+        .rewards { background: var(--light); }
+        .rewards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 25px; }
+        .reward-card {
+            background: white; padding: 30px; border-radius: 20px; text-align: center;
+            box-shadow: var(--shadow); transition: 0.3s;
+        }
+        .reward-card:hover { transform: scale(1.05); }
+        .reward-card i { font-size: 35px; color: var(--accent); margin-bottom: 15px; display: block; }
+
+        /* SORTEO MASIVO */
+        .raffle { background: var(--dark); color: white; text-align: center; }
+        .raffle h2 { color: white; }
+        .phone-mockup {
+            width: 290px; height: 550px; background: #000; border: 10px solid #222;
+            border-radius: 45px; margin: 40px auto; position: relative;
+            display: flex; flex-direction: column; justify-content: center;
+            box-shadow: 0 0 60px rgba(46, 204, 113, 0.4);
+        }
+        .countdown { display: flex; justify-content: center; gap: 10px; margin-top: 20px; }
+        .time-box { background: var(--primary); padding: 12px; border-radius: 12px; min-width: 60px; }
+        .time-box span { display: block; font-size: 22px; font-weight: 800; }
+        .time-box label { font-size: 9px; text-transform: uppercase; font-weight: 600; }
+        .raffle-badge { color: var(--primary); font-weight: bold; font-size: 1.5rem; margin-top: 20px; display: block; }
+
+        /* MODAL LOGIN/REGISTRO */
+        .modal {
+            display: none; position: fixed; z-index: 2000; left: 0; top: 0; 
+            width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); 
+            backdrop-filter: blur(5px); justify-content: center; align-items: center;
+        }
+        .modal-content {
+            background: white; padding: 40px; border-radius: 20px; width: 90%; max-width: 400px;
+            position: relative; text-align: center; box-shadow: var(--shadow);
+        }
+        .modal-content input {
+            width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px;
+        }
+        .modal-content button {
+            width: 100%; padding: 12px; background: var(--primary); color: white; border: none;
+            border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px;
+        }
+        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; }
+
+        footer { background: #1a1a1a; color: #888; padding: 60px 10%; text-align: center; font-size: 0.9rem; }
+
+        @media (max-width: 768px) {
+            .problem-box { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 2.5rem; }
+            .nav-actions .btn-download { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-watermark">LOOPI</div>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">LOOP<span>I</span></div>
+        <div class="nav-actions">
+            <select class="lang-select" id="lang-switch">
+                <option value="es">🇨🇱 Español</option>
+                <option value="en">🇺🇸 English</option>
+            </select>
+            <button onclick="toggleModal()" class="btn-login" id="auth-btn" data-i18n="login">Micuenta</button>
+            <a href="#" class="btn-download" data-i18n="download-app"><i class="fab fa-apple"></i> <i class="fab fa-google-play"></i> Bajar App</a>
+        </div>
+    </header>
+
+    <!-- Modal Autenticación -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="toggleModal()">&times;</span>
+            <h3 id="modal-title" data-i18n="modal-login-title">Iniciar Sesión</h3>
+            <input type="text" id="username" placeholder="Usuario">
+            <input type="password" id="password" placeholder="Contraseña">
+            <button onclick="handleAuth()" id="modal-btn" data-i18n="modal-login-btn">Entrar</button>
+            <p style="margin-top:15px; font-size:12px; cursor:pointer; color:var(--secondary)" 
+               id="toggle-auth" onclick="switchAuthMode()" data-i18n="modal-switch-reg">¿No tienes cuenta? Regístrate</p>
+        </div>
+    </div>
+
+    <!-- Hero -->
+    <section class="hero">
+        <h1 data-i18n="hero-h1">Reciclar en Chile ahora tiene premio</h1>
+        <p data-i18n="hero-p">Conecta con la red de reciclaje más moderna del país. Usa la App Loopi, encuentra tu punto limpio y empieza a acumular beneficios reales.</p>
+        <div style="display:flex; gap:15px; justify-content:center;">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" width="150">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" width="150">
+        </div>
+    </section>
+
+    <!-- Datos Curiosos -->
+    <section>
+        <h2 data-i18n="impact-h2">Datos Impactantes</h2>
+        <div class="facts-grid">
+            <div class="fact-card">
+                <i class="fas fa-recycle"></i>
+                <p data-i18n="fact-1">Reciclar 1 tonelada de papel salva 17 árboles adultos y 26,000 litros de agua.</p>
+            </div>
+            <div class="fact-card">
+                <i class="fas fa-flask"></i>
+                <p data-i18n="fact-2">El vidrio es 100% reciclable y puede ser procesado infinitas veces sin perder calidad.</p>
+            </div>
+            <div class="fact-card">
+                <i class="fas fa-smog"></i>
+                <p data-i18n="fact-3">En Chile producimos 1.1 kg de basura diaria por persona. Solo reciclamos el 4%.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Alianzas Chilenas -->
+    <section class="partners">
+        <h2 data-i18n="logistics-h2">Red Logística Nacional</h2>
+        <p style="text-align:center; margin-bottom:40px; color:#666;" data-i18n="logistics-p">Loopi no está solo. Trabajamos junto a las empresas líderes para certificar tu impacto bajo la Ley REP.</p>
+        <div class="partners-grid">
+            <div class="partner-card">
+                <span class="badge-rep">LEY 20.920</span>
+                <h3>TriCiclos</h3>
+                <p data-i18n="partner-1">Nuestra tecnología se integra en los Puntos Limpios de TriCiclos para validar tus depósitos.</p>
+            </div>
+            <div class="partner-card">
+                <span class="badge-rep">LOGÍSTICA</span>
+                <h3>Rembre</h3>
+                <p data-i18n="partner-2">Servicio de retiro domiciliario programado en RM, Valparaíso y Concepción desde la App.</p>
+            </div>
+            <div class="partner-card">
+                <span class="badge-rep">EDUCACIÓN</span>
+                <h3>Kyklos</h3>
+                <p data-i18n="partner-3">Validamos el impacto de colegios y comunidades escolares en todo el territorio nacional.</p>
+            </div>
+            <div class="partner-card">
+                <span class="badge-rep">MUNICIPAL</span>
+                <h3>Municipios Aliados</h3>
+                <p data-i18n="partner-4">Rastreo GPS en tiempo real de camiones en Vitacura, Las Condes, Providencia y más.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problemática -->
+    <section class="problems">
+        <h2 data-i18n="reality-h2">La Realidad que Cambiamos</h2>
+        <div class="problem-box">
+            <div>
+                <div class="prob-item">
+                    <i class="fas fa-times-circle"></i>
+                    <div>
+                        <h4 data-i18n="prob-h-1">Contenedores Colapsados</h4>
+                        <p data-i18n="prob-p-1">Los puntos de reciclaje descuidados generan microbasurales y desincentivan a los vecinos.</p>
+                    </div>
+                </div>
+                <div class="prob-item">
+                    <i class="fas fa-truck-loading"></i>
+                    <div>
+                        <h4 data-i18n="prob-h-2">Recolección Incierta</h4>
+                        <p data-i18n="prob-p-2">Nadie sabe cuándo pasa el camión, fomentando la acumulación de residuos en las casas.</p>
+                    </div>
+                </div>
+                <div class="prob-item">
+                    <i class="fas fa-fire"></i>
+                    <div>
+                        <h4 data-i18n="prob-h-3">Quema de Residuos</h4>
+                        <p data-i18n="prob-p-3">La quema ilegal en vertederos clandestinos libera químicos que dañan nuestra salud y aire.</p>
+                    </div>
+                </div>
+            </div>
+            <div style="background: #fff5f5; padding: 50px; border-radius: 30px; text-align:center;">
+                <i class="fas fa-biohazard" style="font-size: 80px; color: #e74c3c; opacity: 0.3;"></i>
+                <p style="margin-top:20px; font-weight:700; color:#c0392b;" data-i18n="loopi-solves">LOOPi soluciona esto con gestión digitalizada.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recompensas -->
+    <section class="rewards">
+        <h2 data-i18n="rewards-h2">Premios Reales</h2>
+        <div class="rewards-grid">
+            <div class="reward-card">
+                <i class="fas fa-bus"></i>
+                <h4 data-i18n="reward-1-h">Carga Bip!</h4>
+                <p data-i18n="reward-1-p">Abona saldo directo a tu tarjeta de transporte.</p>
+            </div>
+            <div class="reward-card">
+                <i class="fas fa-ticket-alt"></i>
+                <h4 data-i18n="reward-2-h">CineHoyts</h4>
+                <p data-i18n="reward-2-p">Entradas y combos gratis por tus puntos.</p>
+            </div>
+            <div class="reward-card">
+                <i class="fas fa-shopping-bag"></i>
+                <h4 data-i18n="reward-3-h">Tiendas Retail</h4>
+                <p data-i18n="reward-3-p">Giftcards para Jumbo, Falabella y más.</p>
+            </div>
+            <div class="reward-card">
+                <i class="fas fa-tree"></i>
+                <h4 data-i18n="reward-4-h">Patagonia</h4>
+                <p data-i18n="reward-4-p">Dona puntos para reforestar el sur de Chile.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sorteo -->
+    <section class="raffle">
+        <h2 data-i18n="raffle-h2">Sorteo Masivo Elite</h2>
+        <p data-i18n="raffle-p">Solo para usuarios con impacto superior a 100k puntos</p>
+        <div class="phone-mockup">
+            <i class="fab fa-apple" style="font-size: 40px; color: #555; margin-bottom: 20px;"></i>
+            <h4 style="color:#fff; margin-bottom:10px;">iPhone 15 Pro Max</h4>
+            <div class="countdown">
+                <div class="time-box"><span id="days">00</span><label data-i18n="time-days">Días</label></div>
+                <div class="time-box"><span id="hours">00</span><label data-i18n="time-hours">Hrs</label></div>
+                <div class="time-box"><span id="mins">00</span><label data-i18n="time-mins">Min</label></div>
+                <div class="time-box"><span id="secs">00</span><label data-i18n="time-secs">Seg</label></div>
+            </div>
+            <span class="raffle-badge">+100,000 PTS</span>
+        </div>
+    </section>
+
+    <footer>
+        <div class="logo" style="margin-bottom: 20px;">LOOP<span>I</span></div>
+        <p data-i18n="footer-1">Loopi Chile &copy; 2023. Proyecto en cumplimiento con la Ley REP 20.920.</p>
+        <p data-i18n="footer-2">Transformando residuos en recursos para un Chile más limpio.</p>
+    </footer>
+
+    <script>
+        // --- 1. LÓGICA DEL TEMPORIZADOR (5 MESES) ---
+        const targetDate = new Date();
+        targetDate.setMonth(targetDate.getMonth() + 5);
+
+        function updateTimer() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = days < 10 ? "0" + days : days;
+            document.getElementById("hours").innerText = hours < 10 ? "0" + hours : hours;
+            document.getElementById("mins").innerText = minutes < 10 ? "0" + minutes : minutes;
+            document.getElementById("secs").innerText = seconds < 10 ? "0" + seconds : seconds;
+        }
+        setInterval(updateTimer, 1000);
+        updateTimer();
+
+        // --- 2. LÓGICA DE TRADUCCIÓN ---
+        const i18n = {
+            es: {
+                "login": "Micuenta", "download-app": "Bajar App", "hero-h1": "Reciclar en Chile ahora tiene premio",
+                "impact-h2": "Datos Impactantes", "logistics-h2": "Red Logística Nacional", "reality-h2": "La Realidad que Cambiamos",
+                "rewards-h2": "Premios Reales", "raffle-h2": "Sorteo Masivo Elite", "time-days": "Días", "time-hours": "Hrs",
+                "time-mins": "Min", "time-secs": "Seg", "modal-login-title": "Iniciar Sesión", "modal-login-btn": "Entrar",
+                "modal-switch-reg": "¿No tienes cuenta? Regístrate"
+            },
+            en: {
+                "login": "MyAccount", "download-app": "Download App", "hero-h1": "Recycling in Chile now has rewards",
+                "impact-h2": "Impactful Facts", "logistics-h2": "National Logistics Network", "reality-h2": "The Reality We Change",
+                "rewards-h2": "Real Rewards", "raffle-h2": "Massive Elite Raffle", "time-days": "Days", "time-hours": "Hrs",
+                "time-mins": "Min", "time-secs": "Sec", "modal-login-title": "Login", "modal-login-btn": "Sign In",
+                "modal-switch-reg": "New user? Sign Up"
+            }
+        };
+
+        document.getElementById('lang-switch').addEventListener('change', function(e) {
+            const lang = e.target.value;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (i18n[lang][key]) el.innerText = i18n[lang][key];
+            });
+        });
+
+        // --- 3. LÓGICA DE AUTENTICACIÓN (LOGIN/LOGOUT/REGISTER) ---
+        let authMode = 'login'; // login o register
+        const authBtn = document.getElementById('auth-btn');
+
+        function toggleModal() {
+            const modal = document.getElementById('authModal');
+            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function switchAuthMode() {
+            authMode = authMode === 'login' ? 'register' : 'login';
+            const lang = document.getElementById('lang-switch').value;
+            if (authMode === 'register') {
+                document.getElementById('modal-title').innerText = lang === 'es' ? 'Crear Cuenta' : 'Register';
+                document.getElementById('modal-btn').innerText = lang === 'es' ? 'Registrarme' : 'Sign Up';
+                document.getElementById('toggle-auth').innerText = lang === 'es' ? '¿Ya tienes cuenta? Inicia sesión' : 'Back to Login';
+            } else {
+                document.getElementById('modal-title').innerText = i18n[lang]['modal-login-title'];
+                document.getElementById('modal-btn').innerText = i18n[lang]['modal-login-btn'];
+                document.getElementById('toggle-auth').innerText = i18n[lang]['modal-switch-reg'];
+            }
+        }
+
+        function handleAuth() {
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+
+            if(!user || !pass) return alert("Completa los campos");
+
+            if (authMode === 'register') {
+                localStorage.setItem(`user_${user}`, pass);
+                alert("Cuenta creada correctamente");
+                switchAuthMode();
+            } else {
+                if (localStorage.getItem(`user_${user}`) === pass) {
+                    localStorage.setItem('loggedUser', user);
+                    checkSession();
+                    toggleModal();
+                } else {
+                    alert("Credenciales incorrectas");
+                }
+            }
+        }
+
+        function checkSession() {
+            const logged = localStorage.getItem('loggedUser');
+            if (logged) {
+                authBtn.innerText = `Hola, ${logged} (Salir)`;
+                authBtn.onclick = () => {
+                    localStorage.removeItem('loggedUser');
+                    location.reload();
+                };
+            }
+        }
+        checkSession();
+    </script>
+</body>
+</html>
